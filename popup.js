@@ -33,5 +33,11 @@ chrome.runtime.onMessage.addListener(
       document.getElementById("analytics").innerHTML = '<span class="greentext">Счетчик:</span>'+analyticsid;
       document.getElementById("more_analytics").innerHTML = request.script;
     }
+    else
+    {
+    if (request.message === "callibri_phone" && request.callibri_phone != '') {
+      document.getElementById("callibri_phone").innerHTML = request.callibri_phone;
+    }
+    }
   }
 );

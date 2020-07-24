@@ -8,5 +8,4 @@ function ShowandHide() {
   }else{
   	shadow.style.display="block";
   }
-
 };

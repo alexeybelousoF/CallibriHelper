@@ -34,15 +34,18 @@ var FindScript = function(anyscript,callmessage ) {
       }
       return strinscripthtml;
 }
+// Проверка для смены картинок при загрузке страницы
+window.onload = FindScript('callibri.js', 'iconreload');
 // если услышали клик - выполняем функцию
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
     if( request.message === "clicked_browser_action" ) {
+
       FindScript('metrika/tag.js', 'metrika');
       FindScript('googletagmanager', 'analytics');
       FindScript('callibri.js', 'callibri');
+      chrome.runtime.sendMessage({"message": 'callibri_phone', "callibri_phone": localStorage.getItem('callibri_phone')});
 
     }
   }
 );
-window.onload = FindScript('callibri.js', 'callibri');
