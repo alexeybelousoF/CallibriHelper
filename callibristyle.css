@@ -1,9 +1,15 @@
 body {
   width:400px;
-  font-size: 15px;
+  font-size: 16px;
+  background-color: rgba(0, 0, 0, .8);
+  color: #fff;
+}
+.main-content {
+  margin: 10px;
 }
 .scripts {
   white-space: nowrap;
+  font-size: 13px;
 
 }
 .scripts div {
@@ -16,21 +22,20 @@ body {
 
 }
 .greentext {
-  color: green;
+  color: #00ff2f;
 }
 .redtext {
   color:red;
 }
 .btn {
-  text-decoration: none;
-outline: none;
-color: white;
-border-radius: 10px;
-font-family: 'Montserrat', sans-serif;
-text-transform: uppercase;
-letter-spacing: 2px;
-background-image: linear-gradient(to right, #9EEFE1 0%, #4830F0 51%, #9EEFE1 100%);
-background-size: 200% auto;
-box-shadow: 0 0 20px rgba(0,0,0,.1);
-transition: .5s;
+
+color: black;
+border-radius: 20px;
+border: none;
+background-color: #fec82a;
+padding: 7px;
+margin-top:10px;
+margin-bottom:10px;
+font-weight: bold;
+
 }

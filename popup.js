@@ -1,4 +1,8 @@
 // popup.js
+function InsertData (requestdata) {
+  if (requestdata[requestdata.message] != '')
+  document.getElementById(requestdata.message).innerHTML = requestdata[requestdata.message];
+}
 // Вызывается, когда пользователь нажимает на действие браузера.
 chrome.browserAction.enable(function(tab) {
   // Отправить сообщение на активную вкладку
@@ -7,7 +11,6 @@ chrome.browserAction.enable(function(tab) {
     chrome.tabs.sendMessage(activeTab.id, {"message": "clicked_browser_action"});
   });
 });
-
 
 // Слушаем сообщения
 chrome.runtime.onMessage.addListener(
@@ -34,10 +37,13 @@ chrome.runtime.onMessage.addListener(
       document.getElementById("more_analytics").innerHTML = request.script;
     }
     else
-    {
     if (request.message === "callibri_phone" && request.callibri_phone != '') {
       document.getElementById("callibri_phone").innerHTML = request.callibri_phone;
     }
+    else
+    {
+      console.log(request);
+      InsertData(request);
     }
-  }
+    }
 );

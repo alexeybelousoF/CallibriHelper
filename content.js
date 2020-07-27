@@ -45,6 +45,12 @@ chrome.runtime.onMessage.addListener(
       FindScript('googletagmanager', 'analytics');
       FindScript('callibri.js', 'callibri');
       chrome.runtime.sendMessage({"message": 'callibri_phone', "callibri_phone": localStorage.getItem('callibri_phone')});
+      let callibriLS = JSON.parse(localStorage.getItem('callibri'));
+      chrome.runtime.sendMessage({"message": 'callibri_email', "callibri_email": callibriLS.data.email});
+      chrome.runtime.sendMessage({"message": 'copies_phones', "copies_phones": callibriLS.data.copies_phones});
+      chrome.runtime.sendMessage({"message": 'metrikacounter_id', "metrikacounter_id": callibriLS.data.metrika.counter_id});
+      chrome.runtime.sendMessage({"message": 'site_id', "site_id": callibriLS.data.site_id});
+
 
     }
   }
