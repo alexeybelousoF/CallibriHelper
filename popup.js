@@ -24,16 +24,19 @@ chrome.runtime.onMessage.addListener(
     if (request.message === "metrika" && request.script != ''){
       document.getElementById("more_metrika").innerHTML = request.script;
       var metrikaid = request.script;
-      var indexmetrikaid = metrikaid.lastIndexOf("ym(");
-      metrikaid = metrikaid.substring(indexmetrikaid + 3,indexmetrikaid + 12);
-      document.getElementById("metrika").innerHTML = '<span class="greentext">Счетчик:</span>' + metrikaid;
+      var ymRegexp = /\d+\d+\d+\d+/;
+      metrikaid = ymRegexp.exec(metrikaid);
+      if (metrikaid.length > 10){
+        document.getElementById("metrika").innerHTML = '<span class="greentext">Найдено несколько счетчиков</span>';
+      }
+      else {
+        document.getElementById("metrika").innerHTML = '<span class="greentext">Счетчик: </span>' + metrikaid;
+      }
     }
     else
     if (request.message === "analytics" && request.script != ''){
       var analyticsid = request.script;
-      var indexanalyticsid = analyticsid.lastIndexOf("js?id=");
-      analyticsid = analyticsid.substring(indexanalyticsid + 6,indexanalyticsid + 20);
-      document.getElementById("analytics").innerHTML = '<span class="greentext">Счетчик:</span>'+analyticsid;
+      document.getElementById("analytics").innerHTML = '<span class="greentext">Счетчик есть </span>';
       document.getElementById("more_analytics").innerHTML = request.script;
     }
     else
@@ -42,7 +45,6 @@ chrome.runtime.onMessage.addListener(
     }
     else
     {
-      console.log(request);
       InsertData(request);
     }
     }

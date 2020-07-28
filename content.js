@@ -12,25 +12,20 @@ function escapeHtml(text) {
   }
 // Функция поиска скрипта
 var FindScript = function(anyscript,callmessage ) {
-
-      // ищем в доме скрипт
       const scripthtml = document.querySelectorAll("script");
       var strinscripthtml = '';
-      var message
+      var message;
       scripthtml.forEach(function(item, i, scripthtml){
         if (item.outerHTML.includes(anyscript)) {
       strinscripthtml = strinscripthtml + '<div>' + escapeHtml(item.outerHTML) + '</div>';
     }
       });
-      // есть скрипт или нет
       if  (strinscripthtml != '') {
         chrome.runtime.sendMessage({"message": callmessage, "script": strinscripthtml});
-        //console.log('Скрипта есть')
       }
       else
       {
         chrome.runtime.sendMessage({"message": callmessage, "script": ''});
-        //console.log('Скрипта нет')
       }
       return strinscripthtml;
 }
@@ -40,7 +35,6 @@ window.onload = FindScript('callibri.js', 'iconreload');
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
     if( request.message === "clicked_browser_action" ) {
-
       FindScript('metrika/tag.js', 'metrika');
       FindScript('googletagmanager', 'analytics');
       FindScript('callibri.js', 'callibri');
@@ -50,7 +44,6 @@ chrome.runtime.onMessage.addListener(
       chrome.runtime.sendMessage({"message": 'copies_phones', "copies_phones": callibriLS.data.copies_phones});
       chrome.runtime.sendMessage({"message": 'metrikacounter_id', "metrikacounter_id": callibriLS.data.metrika.counter_id});
       chrome.runtime.sendMessage({"message": 'site_id', "site_id": callibriLS.data.site_id});
-
 
     }
   }
