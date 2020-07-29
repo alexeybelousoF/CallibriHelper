@@ -26,11 +26,13 @@ chrome.runtime.onMessage.addListener(
       var metrikaid = request.script;
       var ymRegexp = /\d+\d+\d+\d+/;
       metrikaid = ymRegexp.exec(metrikaid);
-      if (metrikaid.length > 10){
-        document.getElementById("metrika").innerHTML = '<span class="greentext">Найдено несколько счетчиков</span>';
-      }
-      else {
-        document.getElementById("metrika").innerHTML = '<span class="greentext">Счетчик: </span>' + metrikaid;
+      if (metrikaid) {
+        if (metrikaid.length > 10){
+          document.getElementById("metrika").innerHTML = '<span class="greentext">Найдено несколько счетчиков</span>';
+        }
+        else {
+          document.getElementById("metrika").innerHTML = '<span class="greentext">Счетчик: </span>' + metrikaid;
+        }
       }
     }
     else
