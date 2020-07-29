@@ -1,6 +1,6 @@
 // popup.js
 function InsertData (requestdata) {
-  if (requestdata[requestdata.message] != '')
+  if (requestdata[requestdata.message])
   document.getElementById(requestdata.message).innerHTML = requestdata[requestdata.message];
 }
 // Вызывается, когда пользователь нажимает на действие браузера.
