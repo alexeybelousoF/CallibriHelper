@@ -16,7 +16,6 @@ document.getElementById('header_task_button').addEventListener ('click', CopyTex
 
 function CopyText(){
   var copyText = document.querySelector('#header_task_input')
-  console.log(copyText);
   copyText.select()
   document.execCommand('copy')
 }

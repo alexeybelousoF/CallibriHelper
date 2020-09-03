@@ -58,7 +58,7 @@ chrome.runtime.onMessage.addListener(
       var allTiketData = JSON.parse(request.basecamp)
       allcontent.style.display = "none";
       incallibri.style.display = "block";
-      if (allTiketData[3].Задача !='Добавить') {
+      if (allTiketData[3].task !='Добавить') {
 
         document.getElementById('basecamp_link').innerHTML = "Basecamp: " + "<a href='"+allTiketData[3].task + "' target='_blank'>Ссылка на задачу</a>"
       }
@@ -68,7 +68,23 @@ chrome.runtime.onMessage.addListener(
         var ticketreplace = /\d\d\d\d\d\d\d#/
         var ticketUrl = ticketUrl.replace(ticketreplace, '')
       }
-      document.getElementById('header_task_input').value ="Тикет: " + ticketUrl + "\nПроект: " + allTiketData[1].project+ "\nКлиент: " +allTiketData[2].client
+      var projectUrl = allTiketData[1].project
+      var operationsUrl = projectUrl.replace("edit",'')+"operations"
+      if (projectUrl.indexOf('mt_stat')) {
+        operationsUrl = projectUrl.replace("mt_stat",'')+"operations"
+      }
+      var headerData = "Тикет: " + ticketUrl + "\nПроект: " + projectUrl+ "\nКлиент: " +allTiketData[2].client
+      document.getElementById('addOperations').addEventListener('change', function () {
+
+        if (document.getElementById('addOperations').checked) {
+          headerData = headerData + "\nОперации: " + operationsUrl
+        }
+        else {
+          headerData = "Тикет: " + ticketUrl + "\nПроект: " + projectUrl+ "\nКлиент: " +allTiketData[2].client
+        }
+        document.getElementById('header_task_input').value = headerData;
+      })
+      document.getElementById('header_task_input').value = headerData;
 
     }
     }

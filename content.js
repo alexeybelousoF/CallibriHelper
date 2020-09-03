@@ -37,13 +37,12 @@ window.addEventListener('load',  function (request, sender, sendResponse) {
 
 
 
-  if (currentLocation.indexOf('in.callibri.ru/tickets')+ 1) {
+  if ((currentLocation.indexOf('in.callibri.ru/tickets')+ 1) || (currentLocation.indexOf('in.callibri.ru/admin/tickets'))) {
     chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
       if( request.message == "urlUpdated") {
         var basecamp = document.querySelector('[data-bip-attribute="basecamp_task"]');
         if (basecamp.textContent != 'Добавить'){
           chrome.runtime.sendMessage({"message": 'basecampicon', "basecamp": ''});
-          //console.log(basecamp.textContent)
         } else {
           chrome.runtime.sendMessage({"message": 'incallibriicon', "incallibri": 'incallibri'});
         }
@@ -61,7 +60,7 @@ window.addEventListener('load',  function (request, sender, sendResponse) {
               {"ticket":ticketLink},
               {"project":projectLink.href},
               {"client":clientEmail.textContent},
-              {"tast":basecamp.textContent}
+              {"task":basecamp.textContent}
             )
             allTiketData = JSON.stringify(allTiketData)
               chrome.runtime.sendMessage({"message": 'incallibri', "basecamp": allTiketData});

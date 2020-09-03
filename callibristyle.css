@@ -4,6 +4,9 @@ body {
   background-color: rgba(0, 0, 0, .8);
   color: #fff;
 }
+body a {
+  color: #fec82a;
+}
 .hiden_always {
   opacity: 0;
   max-width: 2ch;
@@ -41,6 +44,10 @@ padding: 7px;
 margin-top:10px;
 margin-bottom:10px;
 font-weight: bold;
+}
+.btn:hover{
+  box-shadow: 0 0 10px rgba(255,255,255,0.5);
+  cursor: pointer;
 }
 /* INCALLIBRI */
 .incallibri {
