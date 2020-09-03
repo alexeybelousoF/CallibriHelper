@@ -1,7 +1,8 @@
 // popup.js
 function InsertData (requestdata) {
-  if (requestdata[requestdata.message])
-  document.getElementById(requestdata.message).innerHTML = requestdata[requestdata.message];
+  var requestdataMessage = requestdata[requestdata.message]
+  if (requestdataMessage)
+  document.getElementById(requestdata.message).innerHTML = requestdataMessage;
 }
 // Вызывается, когда пользователь нажимает на действие браузера.
 chrome.browserAction.enable(function(tab) {
@@ -48,6 +49,27 @@ chrome.runtime.onMessage.addListener(
     else
     {
       InsertData(request);
+    }
+
+    //INCALLIBRI
+    if (request.message == "incallibri"){
+      var allcontent =  document.getElementById("allcontent")
+      var incallibri = document.getElementById("incallibri")
+      var allTiketData = JSON.parse(request.basecamp)
+      allcontent.style.display = "none";
+      incallibri.style.display = "block";
+      if (allTiketData[3].Задача !='Добавить') {
+
+        document.getElementById('basecamp_link').innerHTML = "Basecamp: " + "<a href='"+allTiketData[3].task + "' target='_blank'>Ссылка на задачу</a>"
+      }
+      var ticketUrl = allTiketData[0].ticket
+
+      if (ticketUrl.indexOf('#')) {
+        var ticketreplace = /\d\d\d\d\d\d\d#/
+        var ticketUrl = ticketUrl.replace(ticketreplace, '')
+      }
+      document.getElementById('header_task_input').value ="Тикет: " + ticketUrl + "\nПроект: " + allTiketData[1].project+ "\nКлиент: " +allTiketData[2].client
+
     }
     }
 );
