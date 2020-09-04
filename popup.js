@@ -63,11 +63,14 @@ chrome.runtime.onMessage.addListener(
         document.getElementById('basecamp_link').innerHTML = "Basecamp: " + "<a href='"+allTiketData[3].task + "' target='_blank'>Ссылка на задачу</a>"
       }
       var ticketUrl = allTiketData[0].ticket
-
-      if (ticketUrl.indexOf('#')) {
-        var ticketreplace = /\d\d\d\d\d\d\d#/
-        var ticketUrl = ticketUrl.replace(ticketreplace, '')
+      if (ticketUrl.indexOf('admin')){
+        ticketUrl = ticketUrl.replace('admin/tickets#', 'tickets/')
       }
+      if (ticketUrl.indexOf('#')) {
+        var ticketreplace = /\d\d\d\d\d\d\d\d#/
+        ticketUrl = ticketUrl.replace(ticketreplace, '')
+      }
+
       var projectUrl = allTiketData[1].project
       var operationsUrl = projectUrl.replace("edit",'')+"operations"
       if (projectUrl.indexOf('mt_stat')) {
