@@ -67,7 +67,7 @@ chrome.runtime.onMessage.addListener(
         ticketUrl = ticketUrl.replace('admin/tickets#', 'tickets/')
       }
       if (ticketUrl.indexOf('#')) {
-        var ticketreplace = /\d\d\d\d\d\d\d\d#/
+        var ticketreplace = /[^\/]*\d[#]/
         ticketUrl = ticketUrl.replace(ticketreplace, '')
       }
 
