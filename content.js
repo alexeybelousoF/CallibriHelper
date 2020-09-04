@@ -71,7 +71,7 @@ window.addEventListener('load',  function (request, sender, sendResponse) {
     });
   }
   else {
-    console.log('TEST');
+    
     let callibriLS = JSON.parse(localStorage.getItem('callibri'));
     var checkicon = FindScript('callibri.js', 'callibri');
     // Проверка для смены картинок при загрузке страницы
