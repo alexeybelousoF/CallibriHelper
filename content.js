@@ -37,7 +37,7 @@ window.addEventListener('load',  function (request, sender, sendResponse) {
 
 
 
-  if ((currentLocation.indexOf('in.callibri.ru/tickets')+ 1) || (currentLocation.indexOf('in.callibri.ru/admin/tickets'))) {
+  if ((currentLocation.indexOf('in.callibri.ru/tickets')+ 1) || (currentLocation.indexOf('in.callibri.ru/admin/tickets')+1)) {
     chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
       if( request.message == "urlUpdated") {
         var basecamp = document.querySelector('[data-bip-attribute="basecamp_task"]');
@@ -71,6 +71,7 @@ window.addEventListener('load',  function (request, sender, sendResponse) {
     });
   }
   else {
+    console.log('TEST');
     let callibriLS = JSON.parse(localStorage.getItem('callibri'));
     var checkicon = FindScript('callibri.js', 'callibri');
     // Проверка для смены картинок при загрузке страницы
