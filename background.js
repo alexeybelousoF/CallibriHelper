@@ -1,6 +1,6 @@
 //background.js
 
-var currTab = '';
+let currTab;
 //для мертвых табов
 function callback() {
     if (chrome.runtime.lastError) {
@@ -13,22 +13,23 @@ function callback() {
   // если таб изменился, нужно изменить ID таба
 chrome.tabs.onActiveChanged.addListener( function() {
       chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-      currTab = tabs[0].id;
+        currTab = tabs[0].id;
       });
 });
+
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
   if (changeInfo.status == 'complete'){
+
     chrome.tabs.query({ "active": true,"currentWindow": true }, function (tabs) {
     chrome.tabs.sendMessage(tabs[0].id, { message: "urlUpdated"});
-});
+
+    });
   }
-
 });
-
 
     // Задание красной и зеленой иконки
-chrome.runtime.onMessage.addListener(
-      function(request, sender, sendResponse) {
+chrome.runtime.onMessage.addListener( function(request, sender, sendResponse) {
+
         if( request.message === "greenicon") {
           chrome.browserAction.setIcon({tabId:currTab, path: { "19": "icongreen-19.png","38": "icongreen-38.png" }}, callback);
         }

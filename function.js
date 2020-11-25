@@ -11,11 +11,22 @@ function ShowandHide() {
 };
 //copytext
 
+//copyText 2
+// Слушаем сообщения
+chrome.runtime.onMessage.addListener(
+  function(request, sender, sendResponse) {
+    if (request.message == "messageList") {
+      var helpDataLink = document.querySelectorAll('.help_data_link');
 
-document.getElementById('header_task_button').addEventListener ('click', CopyText);
+      helpDataLink.forEach((item, i) => {
 
-function CopyText(){
-  var copyText = document.querySelector('#header_task_input')
-  copyText.select()
-  document.execCommand('copy')
-}
+        item.addEventListener('click', function(el) {
+          target = el.target;
+          console.log(target);
+          target.select();
+          document.execCommand('copy');
+
+        });
+      });
+    };
+});

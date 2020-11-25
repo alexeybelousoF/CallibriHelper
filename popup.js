@@ -1,9 +1,11 @@
 // popup.js
+// функция вставки для внешних сайтов
 function InsertData (requestdata) {
   var requestdataMessage = requestdata[requestdata.message]
-  if (requestdataMessage)
+  if (requestdataMessage && document.getElementById(requestdata.message) )
   document.getElementById(requestdata.message).innerHTML = requestdataMessage;
 }
+
 // Вызывается, когда пользователь нажимает на действие браузера.
 chrome.browserAction.enable(function(tab) {
   // Отправить сообщение на активную вкладку
@@ -13,82 +15,93 @@ chrome.browserAction.enable(function(tab) {
   });
 });
 
+
 // Слушаем сообщения
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
-    if( request.message === "callibri" && request.script != '' ) {
-      // Выводим че нашли
-      document.getElementById("callirbi").innerHTML = '<span class="greentext">Скрипт есть!</span>';
-      document.getElementById("more_callibri").innerHTML = request.script;
-    }
-    else
-    if (request.message === "metrika" && request.script != ''){
-      document.getElementById("more_metrika").innerHTML = request.script;
-      var metrikaid = request.script;
-      var ymRegexp = /\d+\d+\d+\d+/;
-      metrikaid = ymRegexp.exec(metrikaid);
-      if (metrikaid) {
-        if (metrikaid.length > 10){
-          document.getElementById("metrika").innerHTML = '<span class="greentext">Найдено несколько счетчиков</span>';
-        }
-        else {
-          document.getElementById("metrika").innerHTML = '<span class="greentext">Счетчик: </span>' + metrikaid;
-        }
-      }
-    }
-    else
-    if (request.message === "analytics" && request.script != ''){
-      var analyticsid = request.script;
-      document.getElementById("analytics").innerHTML = '<span class="greentext">Счетчик есть </span>';
-      document.getElementById("more_analytics").innerHTML = request.script;
-    }
-    else
-    if (request.message === "callibri_phone" && request.callibri_phone != '') {
-      document.getElementById("callibri_phone").innerHTML = request.callibri_phone;
-    }
-    else
-    {
-      InsertData(request);
-    }
 
-    //INCALLIBRI
-    if (request.message == "incallibri"){
+    // Функция для переключения на кабинет
+    function InCallibri () {
       var allcontent =  document.getElementById("allcontent")
       var incallibri = document.getElementById("incallibri")
-      var allTiketData = JSON.parse(request.basecamp)
       allcontent.style.display = "none";
       incallibri.style.display = "block";
-      if (allTiketData[3].task !='Добавить') {
+    }
+    console.log(request.message);
+    //Тикеты
+    if ( request.message == "incallibri" || request.message == "messageList") {
+      // скрыли все
+      InCallibri();
+      document.getElementById('blackTheme').addEventListener ('checked', function() {
+        chrome.tabs.sendMessage(activeTab.id, {"message": "blackTheme"});
+        console.log('test');
+      });
+      document.getElementById('newYearTheme').addEventListener ('checked', function() {
+        chrome.tabs.sendMessage(activeTab.id, {"message": "newYearTheme"});
+                console.log('test');
+      });
 
-        document.getElementById('basecamp_link').innerHTML = "Basecamp: " + "<a href='"+allTiketData[3].task + "' target='_blank'>Ссылка на задачу</a>"
-      }
-      var ticketUrl = allTiketData[0].ticket
-      if (ticketUrl.indexOf('admin')){
-        ticketUrl = ticketUrl.replace('admin/tickets#', 'tickets/')
-      }
-      if (ticketUrl.indexOf('#')) {
-        var ticketreplace = /[^\/]*\d[#]/
-        ticketUrl = ticketUrl.replace(ticketreplace, '')
-      }
-
-      var projectUrl = allTiketData[1].project
-      var operationsUrl = projectUrl.replace("edit",'')+"operations"
-      if (projectUrl.indexOf('mt_stat')) {
-        operationsUrl = projectUrl.replace("mt_stat",'')+"operations"
-      }
-      var headerData = "Тикет: " + ticketUrl + "\nПроект: " + projectUrl+ "\nКлиент: " +allTiketData[2].client
-      document.getElementById('addOperations').addEventListener('change', function () {
-
-        if (document.getElementById('addOperations').checked) {
-          headerData = headerData + "\nОперации: " + operationsUrl
-        }
-        else {
-          headerData = "Тикет: " + ticketUrl + "\nПроект: " + projectUrl+ "\nКлиент: " +allTiketData[2].client
-        }
-        document.getElementById('header_task_input').value = headerData;
-      })
-      document.getElementById('header_task_input').value = headerData;
 
     }
+    // Свободные номера
+    else
+
+    if (request.message == "freephones") {
+        let freePhoneNumbers = '';
+        InCallibri();
+        let arrPhoneNumbers = JSON.parse(request.arrPhoneNumbers);
+        arrPhoneNumbers.forEach((item, i) => {
+          freePhoneNumbers = freePhoneNumbers + item + "\n";
+        });
+        document.getElementById('header_task_button').textContent = 'Скопировать номера';
+        document.getElementById('addOperations').style = "display:none;";
+        document.getElementById('addOperationsText').style = "display:none;";
+        document.getElementById('header_task_input').value = freePhoneNumbers;
     }
-);
+
+    // Любой другой сайт
+    else {
+      if ( request.message === "callibri" && request.script != '' ) {
+        // Выводим че нашли
+        document.getElementById("callirbi").innerHTML = '<span class="greentext">Скрипт есть!</span>';
+        document.getElementById("more_callibri").innerHTML = request.script;
+      }
+      else
+
+      if (request.message === "metrika" && request.script != ''){
+        document.getElementById("more_metrika").innerHTML = request.script;
+      }
+
+      if (request.message === "allmetrikaID" && request.script != '') {
+        var arrMetrikaID = JSON.parse(request.allmetrikaID);
+        var allmetrikaID = '';
+
+        arrMetrikaID.forEach( function(item, i) {
+          if (!allmetrikaID) {
+            allmetrikaID = item
+          }
+          allmetrikaID = allmetrikaID +", "+ item;
+          console.log(allmetrikaID);
+          return allmetrikaID;
+        })
+
+        document.getElementById("metrika").innerHTML = '<span class="greentext"> ' + allmetrikaID + '</span>';
+      }
+      else
+
+      if (request.message === "analytics" && request.script != ''){
+        var analyticsid = request.script;
+        document.getElementById("analytics").innerHTML = '<span class="greentext">Счетчик есть </span>';
+        document.getElementById("more_analytics").innerHTML = request.script;
+      }
+      else
+
+      if (request.message === "callibri_phone" && request.callibri_phone != '') {
+        document.getElementById("callibri_phone").innerHTML = request.callibri_phone;
+      }
+      else
+      {
+        InsertData(request);
+      }
+    }
+});

@@ -35,15 +35,14 @@ body a {
   color:red;
 }
 .btn {
-
-color: black;
-border-radius: 20px;
-border: none;
-background-color: #fec82a;
-padding: 7px;
-margin-top:10px;
-margin-bottom:10px;
-font-weight: bold;
+  color: black;
+  border: none;
+  background-color: #fec82a;
+  padding: 7px;
+  margin-top:10px;
+  margin-bottom:10px;
+  font-weight: bold;
+  border-radius: 25px;
 }
 .btn:hover{
   box-shadow: 0 0 10px rgba(255,255,255,0.5);
@@ -52,4 +51,28 @@ font-weight: bold;
 /* INCALLIBRI */
 .incallibri {
   display: none;
+}
+.help_data_button {
+  color: #fec82a;
+  width: 90%;
+  padding: 2px;
+}
+.hiden_always_help {
+  color: transparent;
+  background-color: transparent;
+  background-image: url('icons-copying-icon.svg');
+  background-repeat: no-repeat;
+  background-position: left;
+  background-size:20px;
+  resize: none;
+  overflow:hidden;
+  max-height:3ch;
+  max-width: 12ch;
+  cursor: pointer;
+  border: none;
+  margin-top: 5px;
+  margin-left: 10px;
+}
+.help_data_button:hover {
+  color: white;
 }
