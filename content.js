@@ -32,21 +32,23 @@ var FindScript = function (anyscript,callmessage ) {
 }
 
 
-// *** Новогодняя херота, убрать
-  let blackTheme = false;
-  let newYearTheme = false;
-// ***
-
 // страничка загрузилась, смотрим где мы
 window.addEventListener('load',  function (request, sender, sendResponse) {
   var currentLocation = window.location.href;
 
-
   //********************
   // Мы в тикетах
   //********************
-
   if ( currentLocation.indexOf('in.callibri.ru/tickets')+1   ||  currentLocation.indexOf('in.callibri.ru/admin/tickets')+1 )  {
+
+      //слушаем клик
+      chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+          if ( request.message === "clicked_browser_action" ) {
+            // отрисовали кнопки
+            chrome.runtime.sendMessage({"message": 'incallibri', "incallibri": "incallibri"});
+          }
+      });
+
 
 
 
@@ -56,7 +58,7 @@ window.addEventListener('load',  function (request, sender, sendResponse) {
     <div id="linkBasecamp" style="width:45%; display:inline;"></div></div>`;
     // Кнопка расширения поля ввода
     document.querySelector('.button_group.text_tools').innerHTML = document.querySelector('.button_group.text_tools').innerHTML +'<div type="color" id="expand_input" ' +
-    'style="font-size: 20px; cursor: pointer;">🎅🏾</div>';
+    'style="font-size: 20px; cursor: pointer;">🖖🏾</div>';
     document.getElementById('messages_div').style.height = 'calc(100vh - 250px)';
     document.getElementById('expand_input').addEventListener ('click', function () {
 
@@ -77,6 +79,7 @@ window.addEventListener('load',  function (request, sender, sendResponse) {
     //Отслеживаем изменение URL
     chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
       if ( request.message == "urlUpdated" ) {
+
         var basecamp = document.querySelector('[data-bip-attribute="basecamp_task"]');
         var projectLink = document.getElementById('project_link');
         var ticketLink = window.location.href;
@@ -114,7 +117,6 @@ window.addEventListener('load',  function (request, sender, sendResponse) {
 
         //обработка галочки "Операции"
         document.getElementById('addOperations').addEventListener('change', function () {
-
           if (document.getElementById('addOperations').checked) {
             headerData = headerData + "\nОперации: " + operationsUrl;
           }
@@ -126,8 +128,7 @@ window.addEventListener('load',  function (request, sender, sendResponse) {
         });
 
         headerTaskInput.value = headerData;
-
-        //обрабатываем кнопку
+        //обрабатываем кнопку копирования
         document.getElementById('header_task_button').addEventListener ('click', CopyText);
         // Функция копирования
         function CopyText(){
@@ -135,6 +136,7 @@ window.addEventListener('load',  function (request, sender, sendResponse) {
           copyText.select();
           document.execCommand('copy');
         };
+
         // Ссылка на задачу
         if ( basecamp.textContent != 'Добавить' ){
           document.getElementById("linkBasecamp").innerHTML = "<button id='bot_answere_button'>Сформировать ответ</button><a target='_blank' style='color:black' href='"
@@ -146,7 +148,6 @@ window.addEventListener('load',  function (request, sender, sendResponse) {
           document.getElementById("linkBasecamp").innerHTML = "<button id='bot_answere_button'>Сформировать ответ</button><span style='color:gray;'> Посмотреть задачу</span>";
           chrome.runtime.sendMessage({"message": 'incallibriicon', "incallibri": 'incallibri'});
         }
-
 
 
         //Формируем ответ
@@ -168,16 +169,13 @@ window.addEventListener('load',  function (request, sender, sendResponse) {
             document.querySelector('[input="ticket_content"]').innerText = "Добрый день!\n"+ helpDataInput;
           }
 
-        });
-      }
+          // Заменяем блок с клиентом на баланс и услуги
 
-      //слушаем клик
-      chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-          if ( request.message === "clicked_browser_action" ) {
-            // Пока это черный квадрат
-            chrome.runtime.sendMessage({"message": 'incallibri', "incallibri": "incallibri"});
-          }
-      });
+        });
+
+        var userInfo = document.querySelector('.user_info > p:nth-child(4)').textContent.replace(/Проект:(.*)\)/g, '📞');
+        document.getElementById('client_filter').innerHTML = userInfo;
+      }
     });
   }
 
@@ -241,7 +239,7 @@ window.addEventListener('load',  function (request, sender, sendResponse) {
   //******************
   // Любой другой сайт
   //******************
-  
+
   else {
 
     let callibriLS = JSON.parse(localStorage.getItem('callibri'));
@@ -258,15 +256,23 @@ window.addEventListener('load',  function (request, sender, sendResponse) {
     // Проверка для смены картинок при загрузке страницы
     if ( checkicon != '' && (callibriLS) ) {
       chrome.runtime.sendMessage({"message": 'greenicon', "greenicon": "greenicon"});
+      console.log('green');
     }
     if ( (!checkicon) && (!callibriLS) ) {
       chrome.runtime.sendMessage({"message": 'redicon', "redicon": "redicon"});
+      console.log('red');
     }
     if ( checkicon === '' && callibriLS ) {
       chrome.runtime.sendMessage({"message": 'yellowicon', "yellowicon": "yellowicon"});
     }
     // если услышали клик - выполняем поиск данных
       chrome.runtime.onMessage.addListener( function(request, sender, sendResponse) {
+          if ( request.message === "callibri_script_install") {
+            console.log(request.message);
+            var callibriScript = document.createElement('script');
+            callibriScript.src = "//cdn.callibri.ru/callibri.js";
+            document.getElementsByTagName('body')[0].appendChild(callibriScript);
+          }
           if ( request.message === "clicked_browser_action" ) {
             FindScript('metrika/tag.js', 'metrika');
             FindScript('googletagmanager', 'analytics');
@@ -286,10 +292,11 @@ window.addEventListener('load',  function (request, sender, sendResponse) {
                                         callibriLS.data.site_id + "/edit'>" + callibriLS.data.site_id + "</a>"});
 
               var lcCurrentPage = localStorage.getItem('callibri_visitor_send_event');// lc - lead catcher
-
-              lcCurrentPage = '<a target="_blank" href="https://in.callibri.ru/project/' + callibriLS.data.site_id + '/widget/lid_catchers' + '#group_' + lcCurrentPage.slice(2, lcCurrentPage.indexOf('|')) +
-              '&segment_group_' + lcCurrentPage.slice(lcCurrentPage.indexOf('|') +1, lcCurrentPage.lastIndexOf('|')) + '">Ссылка на ловец</a>';
-
+              if (lcCurrentPage) {
+                lcCurrentPage = '<a target="_blank" href="https://in.callibri.ru/project/' + callibriLS.data.site_id + '/widget/lid_catchers' +
+                '#group_' + lcCurrentPage.slice(2, lcCurrentPage.indexOf('|')) +
+                '&segment_group_' + lcCurrentPage.slice(lcCurrentPage.indexOf('|') +1, lcCurrentPage.lastIndexOf('|')) + '">Ссылка на ловец</a>';
+              }
               chrome.runtime.sendMessage({"message": 'lc_current_Page', "lc_current_Page": lcCurrentPage})
               if ( callibriLS.data.copies_phones[0] ){
                 chrome.runtime.sendMessage({"message": 'copies_phones', "copies_phones": callibriLS.data.copies_phones[0].phone});

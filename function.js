@@ -30,3 +30,12 @@ chrome.runtime.onMessage.addListener(
       });
     };
 });
+
+//Кнопка - Установка скрипта
+if ( document.getElementById('callibri_script_install') ) {
+  document.getElementById('callibri_script_install').addEventListener('click', function() {
+    console.log('clicknut');
+    chrome.tabs.sendMessage(activeTab, {"message": "callibri_script_install"});
+    document.getElementById('callibri_script_install').textContent = "Я нажата";
+  });
+}
