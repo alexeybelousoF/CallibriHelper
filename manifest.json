@@ -15,7 +15,7 @@
       "matches": [
         "<all_urls>"
       ],
-      "js": ["botHelper.js", "content.js"]
+      "js": ["callHelper.js","botHelper.js", "content.js"]
     }
   ],
   "browser_action": {

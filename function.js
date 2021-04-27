@@ -1,4 +1,4 @@
-//function views
+//function views - подключается на менюшке(попап.хтмл)
 showscripts.addEventListener('click',ShowandHide);
 // скрывашка
 function ShowandHide() {

@@ -18,19 +18,23 @@ var FindScript = function (anyscript,callmessage ) {
       var message;
       scripthtml.forEach( function(item, i, scripthtml){
         if ( item.outerHTML.includes(anyscript) ) {
-        strinscripthtml = strinscripthtml + '<div>' + escapeHtml(item.outerHTML) + '</div>';
+          strinscripthtml = strinscripthtml + '<div>' + escapeHtml(item.outerHTML) + '</div>';
         }
       });
-      if  (strinscripthtml != '') {
-        chrome.runtime.sendMessage({"message": callmessage, "script": strinscripthtml});
-      }
-      else
-      {
-        chrome.runtime.sendMessage({"message": callmessage, "script": ''});
-      }
+      chrome.runtime.sendMessage({"message": callmessage, "script": strinscripthtml});
       return strinscripthtml;
 }
-
+// Проверка для смены картинок при загрузке страницы
+function check_icon(icon_status, callibriLS) {
+  var icon_status = FindScript('callibri.js', 'callibri');
+  if ( (!icon_status) && (!callibriLS) ) return
+  if ( icon_status != '' && (callibriLS) ) {
+    chrome.runtime.sendMessage({"message": 'greenicon', "greenicon": "greenicon"});
+  }
+  if ( icon_status === '' && callibriLS ) {
+    chrome.runtime.sendMessage({"message": 'yellowicon', "yellowicon": "yellowicon"});
+  }
+}
 
 // страничка загрузилась, смотрим где мы
 window.addEventListener('load',  function (request, sender, sendResponse) {
@@ -40,7 +44,7 @@ window.addEventListener('load',  function (request, sender, sendResponse) {
   // Мы в тикетах
   //********************
   if ( currentLocation.indexOf('in.callibri.ru/tickets')+1   ||  currentLocation.indexOf('in.callibri.ru/admin/tickets')+1 )  {
-
+      waiting_call_container(); // обрабатываем облачко звонка
       //слушаем клик
       chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
           if ( request.message === "clicked_browser_action" ) {
@@ -48,9 +52,6 @@ window.addEventListener('load',  function (request, sender, sendResponse) {
             chrome.runtime.sendMessage({"message": 'incallibri', "incallibri": "incallibri"});
           }
       });
-
-
-
 
     // создаем див в тикетах
     document.getElementById("tag_filter").innerHTML = `
@@ -66,35 +67,29 @@ window.addEventListener('load',  function (request, sender, sendResponse) {
       if ( document.getElementById('messages_div').style.height == 'calc(100vh - 250px)' ) {
         document.getElementById('messages_div').style.height = 'calc(100vh - 400px)';
         document.querySelector('[input="ticket_content"]').style = 'height: 250px; overflow: auto;';
-
       }
       else
       {
         document.getElementById('messages_div').style.height = 'calc(100vh - 250px)';
         document.querySelector('[input="ticket_content"]').style = 'height: 108px; overflow: auto;';
-
       }
     });
 
     //Отслеживаем изменение URL
     chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
       if ( request.message == "urlUpdated" ) {
-
         var basecamp = document.querySelector('[data-bip-attribute="basecamp_task"]');
         var projectLink = document.getElementById('project_link');
         var ticketLink = window.location.href;
         var clientEmail = document.querySelector('.in .name');
-
         if (ticketLink.includes('?')) {
           var ticketreplace = /\?.+#/;
           ticketLink = ticketLink.replace(ticketreplace, '#');
           console.log(ticketLink);
         }
-
         if (ticketLink.includes('admin')){
           ticketLink = ticketLink.replace('admin/tickets#', 'tickets/')
         }
-
         if (ticketLink.includes('#')) {
           ticketreplace = /[^\/]*\d[#]/;
           ticketLink = ticketLink.replace(ticketreplace, '')
@@ -149,7 +144,6 @@ window.addEventListener('load',  function (request, sender, sendResponse) {
           chrome.runtime.sendMessage({"message": 'incallibriicon', "incallibri": 'incallibri'});
         }
 
-
         //Формируем ответ
         document.getElementById("bot_answere_button").addEventListener ('click', function() {
           // Формируем данные для бота
@@ -168,11 +162,8 @@ window.addEventListener('load',  function (request, sender, sendResponse) {
           if (document.querySelector('[input="ticket_content"]').textContent == '') {
             document.querySelector('[input="ticket_content"]').innerText = "Добрый день!\n"+ helpDataInput;
           }
-
-          // Заменяем блок с клиентом на баланс и услуги
-
         });
-
+        // Заменяем блок с клиентом на баланс и услуги
         var userInfo = document.querySelector('.user_info > p:nth-child(4)').textContent.replace(/Проект:(.*)\)/g, '📞');
         document.getElementById('client_filter').innerHTML = userInfo;
       }
@@ -187,6 +178,7 @@ window.addEventListener('load',  function (request, sender, sendResponse) {
     chrome.runtime.sendMessage({"message": 'incallibriicon', "incallibri": 'incallibri'});
     chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
       if ( request.message == "urlUpdated" ) {
+        waiting_call_container(); // обрабатываем облачко звонка
 
         document.querySelector('.user-announcements').innerHTML = "<button class='custom-a-button-chat' id='bot_answere_button'>Сформировать ответ</button>";
         //Формируем ответ
@@ -207,28 +199,25 @@ window.addEventListener('load',  function (request, sender, sendResponse) {
           if (document.querySelector('#message-form #message_text').textContent == '') {
             document.querySelector('#message-form #message_text').innerText = "Добрый день!\n"+ helpDataInput;
           }
-
         });
       }
     });
   }
 
   //********************
-  // Номера - Свободные
+  // Номера - Свободные  -- функция пока не юзается совсем
   //********************
 
   else if ( currentLocation.indexOf('in.callibri.ru/admin/freephones')+1 ) {
     //слушаем клик
     chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         if ( request.message === "clicked_browser_action" ) {
-
           let freePhoneNumbers = document.querySelectorAll('tbody > tr> td:nth-child(3) > span');
           let arrPhoneNumbers = new Array();
           freePhoneNumbers.forEach((item, i) => {
             var phoneNumber = item.innerHTML.replace(/\s/g, '');
             phoneNumber = phoneNumber.replace('+', '');
             arrPhoneNumbers.push(phoneNumber);
-
           });
           arrPhoneNumbers = JSON.stringify(arrPhoneNumbers);
           chrome.runtime.sendMessage({"message": 'freephones', "arrPhoneNumbers": arrPhoneNumbers});
@@ -248,27 +237,15 @@ window.addEventListener('load',  function (request, sender, sendResponse) {
     for ( var i = 0, len = localStorage.length; i < len; ++i ) {
       if ( localStorage.key( i ).match(ymRegexp) ) {
         metrikaLS.push( localStorage.key( i ).match(ymRegexp)[1] );
-
       }
     }
     var allmetrikaID = JSON.stringify(metrikaLS)
-    var checkicon = FindScript('callibri.js', 'callibri');
-    // Проверка для смены картинок при загрузке страницы
-    if ( checkicon != '' && (callibriLS) ) {
-      chrome.runtime.sendMessage({"message": 'greenicon', "greenicon": "greenicon"});
-      console.log('green');
-    }
-    if ( (!checkicon) && (!callibriLS) ) {
-      chrome.runtime.sendMessage({"message": 'redicon', "redicon": "redicon"});
-      console.log('red');
-    }
-    if ( checkicon === '' && callibriLS ) {
-      chrome.runtime.sendMessage({"message": 'yellowicon', "yellowicon": "yellowicon"});
-    }
+
+    check_icon(callibriLS);//вызов при загрузке страницы
     // если услышали клик - выполняем поиск данных
       chrome.runtime.onMessage.addListener( function(request, sender, sendResponse) {
           if ( request.message === "callibri_script_install") {
-            console.log(request.message);
+
             var callibriScript = document.createElement('script');
             callibriScript.src = "//cdn.callibri.ru/callibri.js";
             document.getElementsByTagName('body')[0].appendChild(callibriScript);
@@ -277,13 +254,26 @@ window.addEventListener('load',  function (request, sender, sendResponse) {
             FindScript('metrika/tag.js', 'metrika');
             FindScript('googletagmanager', 'analytics');
             chrome.runtime.sendMessage({"message": 'allmetrikaID', "allmetrikaID": allmetrikaID});
+            callibriLS = JSON.parse(localStorage.getItem('callibri'));
+            check_icon(callibriLS);// и поиск и замена повторно при клике
 
-            if ( checkicon != '' ) {
-              chrome.runtime.sendMessage({"message": 'callibri', "script": checkicon});
+            if ( icon_status != '' ) {
+              chrome.runtime.sendMessage({"message": 'callibri', "script": icon_status});
             }
 
             if ( localStorage.getItem('callibri') ) {
-              chrome.runtime.sendMessage({"message": 'callibri_phone', "callibri_phone": localStorage.getItem('callibri_phone')});
+              if (localStorage.getItem('callibri_phone')) {
+                chrome.runtime.sendMessage({"message": 'callibri_phone', "callibri_phone": localStorage.getItem('callibri_phone')});
+              }
+              else {
+                if (callibriLS.data.number && !callibriLS.data.dynamic)  {
+                  console.log(localStorage.getItem('callibri_phone'));
+                  chrome.runtime.sendMessage({"message": 'callibri_phone', "callibri_phone": callibriLS.data.number + ' - <span class="redtext">Статика</span>'});
+                } else {
+                  chrome.runtime.sendMessage({"message": 'callibri_phone', "callibri_phone": callibriLS.data.number});
+                }
+              }
+
               chrome.runtime.sendMessage({"message": 'callibri_email', "callibri_email": callibriLS.data.email});
               chrome.runtime.sendMessage({"message": 'metrikacounter_id', "metrikacounter_id": "<a target='_blank' href='https://metrika.yandex.ru/dashboard?id=" +
                                         callibriLS.data.metrika.counter_id + "'>" + callibriLS.data.metrika.counter_id  + "</a>"});
@@ -298,7 +288,7 @@ window.addEventListener('load',  function (request, sender, sendResponse) {
                 '&segment_group_' + lcCurrentPage.slice(lcCurrentPage.indexOf('|') +1, lcCurrentPage.lastIndexOf('|')) + '">Ссылка на ловец</a>';
               }
               chrome.runtime.sendMessage({"message": 'lc_current_Page', "lc_current_Page": lcCurrentPage})
-              if ( callibriLS.data.copies_phones[0] ){
+              if ( callibriLS.data.copies_phones ){
                 chrome.runtime.sendMessage({"message": 'copies_phones', "copies_phones": callibriLS.data.copies_phones[0].phone});
               }
             }
