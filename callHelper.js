@@ -1,6 +1,6 @@
 // callHelper - помощник по звонкам
 
-//Функция добавления фишек ко звонку
+//Функция добавления фишек ко звонку - звонки прилетают по определенным правилам, пока не доделано.
 function change_call_container() {
   var containers = document.querySelectorAll('.call_container');
 

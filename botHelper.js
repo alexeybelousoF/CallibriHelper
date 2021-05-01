@@ -6,16 +6,12 @@ function IndexOfAll (messageList, neededArray) {
     var newArrayROFL = []
 
     neededArray.forEach((item, i) => { newArrayROFL.push(item); }); // JS просто отказывается работать с моим массивом, поэтому делаю так
-
     newArrayROFL.forEach((item, i) => {
-
       //console.log(item + ' : ' + messageList.includes(item)); // Вывод результата проверки - для тестов
-
       if (messageList.includes(item)) {
         needed = true;
       }
     });
-
     return needed;
 }
 let _botHelper = {     // объект
@@ -90,17 +86,12 @@ let _botHelper = {     // объект
     1: 'Перехватчик форм вам нужно только включить, а для этого поставить галочку в поле "включить перехватчик форм" в "Настройки" МультиТрекинг" "Основное". Перехватчик настраивается автоматически.\nПосле перейдите на сайт (в режиме инкогнито) по условиям подмены и отправьте тестовые заявки. Если заявки отобразились в ЕЖЛ, то перехватчик настроен. Если нет, тогда прошу вас написать нам, и мы настроим формы вручную. Также укажите какие именно формы нужно настроить.'}
 };
 
-
-
 var helpHtmlMiddle = ': ';
 var newLine = '\n';
 
-
 // Вынесено в функцию, потому что я плохой джаваскриптизер
 function HelpProcedure(messageList, helpAllData) {
-
   for (key in _botHelper) {
-
     botkey = _botHelper[key];
     if ( IndexOfAll(messageList, botkey[0]) ) {
       if (helpAllData.length > 100) {

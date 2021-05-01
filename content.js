@@ -164,8 +164,9 @@ window.addEventListener('load',  function (request, sender, sendResponse) {
           }
         });
         // Заменяем блок с клиентом на баланс и услуги
-        var userInfo = document.querySelector('.user_info > p:nth-child(4)').textContent.replace(/Проект:(.*)\)/g, '📞');
-        document.getElementById('client_filter').innerHTML = userInfo;
+        var services = document.querySelector('.user_info > p:nth-child(4)').textContent.replace(/Проект:(.*)\)/g, '📞');
+        var user_info = document.querySelector('a.show_crm_client').outerHTML;
+        document.getElementById('client_filter').innerHTML = services + user_info;
       }
     });
   }
