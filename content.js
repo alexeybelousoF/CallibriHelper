@@ -25,13 +25,14 @@ var FindScript = function (anyscript,callmessage ) {
       return strinscripthtml;
 }
 // Проверка для смены картинок при загрузке страницы
-function check_icon(icon_status, callibriLS) {
+function check_icon(callibriLS) {
   var icon_status = FindScript('callibri.js', 'callibri');
-  if ( (!icon_status) && (!callibriLS) ) return
-  if ( icon_status != '' && (callibriLS) ) {
+  if ( !icon_status || !callibriLS ) {
+    return false
+  };
+  if (icon_status != '') {
     chrome.runtime.sendMessage({"message": 'greenicon', "greenicon": "greenicon"});
-  }
-  if ( icon_status === '' && callibriLS ) {
+  } else {
     chrome.runtime.sendMessage({"message": 'yellowicon', "yellowicon": "yellowicon"});
   }
 }
