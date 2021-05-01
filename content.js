@@ -32,6 +32,7 @@ function check_icon(callibriLS) {
   };
   if (icon_status != '') {
     chrome.runtime.sendMessage({"message": 'greenicon', "greenicon": "greenicon"});
+    chrome.runtime.sendMessage({"message": 'callibri', "script": icon_status});
   } else {
     chrome.runtime.sendMessage({"message": 'yellowicon', "yellowicon": "yellowicon"});
   }
@@ -258,10 +259,6 @@ window.addEventListener('load',  function (request, sender, sendResponse) {
             chrome.runtime.sendMessage({"message": 'allmetrikaID', "allmetrikaID": allmetrikaID});
             callibriLS = JSON.parse(localStorage.getItem('callibri'));
             check_icon(callibriLS);// и поиск и замена повторно при клике
-
-            if ( icon_status != '' ) {
-              chrome.runtime.sendMessage({"message": 'callibri', "script": icon_status});
-            }
 
             if ( localStorage.getItem('callibri') ) {
               if (localStorage.getItem('callibri_phone')) {
