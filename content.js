@@ -46,7 +46,7 @@ window.addEventListener('load',  function (request, sender, sendResponse) {
   // Мы в тикетах
   //********************
   if ( currentLocation.indexOf('in.callibri.ru/tickets')+1   ||  currentLocation.indexOf('in.callibri.ru/admin/tickets')+1 )  {
-      waiting_call_container(); // обрабатываем облачко звонка
+      waiting_call_container(); // обрабатываем облачко звонка UNUSEDYET
       //слушаем клик
       chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
           if ( request.message === "clicked_browser_action" ) {
@@ -63,9 +63,8 @@ window.addEventListener('load',  function (request, sender, sendResponse) {
     document.querySelector('.button_group.text_tools').innerHTML = document.querySelector('.button_group.text_tools').innerHTML +'<div type="color" id="expand_input" ' +
     'style="font-size: 20px; cursor: pointer;">🖖🏾</div>';
     document.getElementById('messages_div').style.height = 'calc(100vh - 250px)';
+
     document.getElementById('expand_input').addEventListener ('click', function () {
-
-
       if ( document.getElementById('messages_div').style.height == 'calc(100vh - 250px)' ) {
         document.getElementById('messages_div').style.height = 'calc(100vh - 400px)';
         document.querySelector('[input="ticket_content"]').style = 'height: 250px; overflow: auto;';
@@ -142,7 +141,7 @@ window.addEventListener('load',  function (request, sender, sendResponse) {
         }
         else
         {
-          document.getElementById("linkBasecamp").innerHTML = "<button id='bot_answere_button'>Сформировать ответ</button><span style='color:gray;'> Посмотреть задачу</span>";
+          document.getElementById("linkBasecamp").innerHTML = "<button id='bot_answere_button'>Сформировать ответ</button><span style='color:gray;'> Без задачи</span>";
           chrome.runtime.sendMessage({"message": 'incallibriicon', "incallibri": 'incallibri'});
         }
 
@@ -167,6 +166,7 @@ window.addEventListener('load',  function (request, sender, sendResponse) {
         });
         // Заменяем блок с клиентом на баланс и услуги
         var services = document.querySelector('.user_info > p:nth-child(4)').textContent.replace(/Проект:(.*)\)/g, '📞');
+        services = services.replace("💰", "~~~ Есть МЧ ~~~");
         var user_info = document.querySelector('a.show_crm_client').outerHTML;
         document.getElementById('client_filter').innerHTML = services + user_info;
       }
@@ -181,7 +181,39 @@ window.addEventListener('load',  function (request, sender, sendResponse) {
     chrome.runtime.sendMessage({"message": 'incallibriicon', "incallibri": 'incallibri'});
     chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
       if ( request.message == "urlUpdated" ) {
-        waiting_call_container(); // обрабатываем облачко звонка
+        waiting_call_container(); // обрабатываем облачко звонка UNUSEDYET
+
+        document.querySelector('.user-announcements').innerHTML = "<button class='custom-a-button-chat' id='bot_answere_button'>Сформировать ответ</button>";
+        //Формируем ответ
+        document.getElementById("bot_answere_button").addEventListener ('click', function() {
+          // Формируем данные для бота
+          var messageNodelist = document.querySelectorAll('#message-list-container .message .body');
+          var messageList = '';
+
+          messageNodelist.forEach((item, i) => {
+            messageList  = messageList + item.innerHTML;
+          });
+
+          var helpAllData = '';
+          var messageList = messageList.toLowerCase();
+          var helpDataInput = HelpProcedure(messageList, helpAllData); //суперфункция
+
+          //Вставлялка бота (проверка на пустоту на всякий случай)
+          if (document.querySelector('#message-form #message_text').textContent == '') {
+            document.querySelector('#message-form #message_text').innerText = "Добрый день!\n"+ helpDataInput;
+          }
+        });
+      }
+    });
+  }
+  //********************
+  // НОВЫЙ ЧЯТИК
+  //********************
+  else if (currentLocation.indexOf('in.callibri.ru/dialog')+1 ){
+    chrome.runtime.sendMessage({"message": 'incallibriicon', "incallibri": 'incallibri'});
+    chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+      if ( request.message == "urlUpdated" ) {
+        waiting_call_container(); // обрабатываем облачко звонка UNUSEDYET
 
         document.querySelector('.user-announcements').innerHTML = "<button class='custom-a-button-chat' id='bot_answere_button'>Сформировать ответ</button>";
         //Формируем ответ
