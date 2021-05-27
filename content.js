@@ -145,8 +145,7 @@ window.addEventListener('load',  function (request, sender, sendResponse) {
           chrome.runtime.sendMessage({"message": 'incallibriicon', "incallibri": 'incallibri'});
         }
 
-        //Формируем ответ
-        document.getElementById("bot_answere_button").addEventListener ('click', function() {
+        function BotAnswer() {
           // Формируем данные для бота
           var messageNodelist = document.querySelectorAll('#message-list-container .body');
           var messageList = '';
@@ -155,15 +154,20 @@ window.addEventListener('load',  function (request, sender, sendResponse) {
             messageList  = messageList + item.innerHTML;
           });
 
-          var helpAllData = '';
           var messageList = messageList.toLowerCase();
-          var helpDataInput = HelpProcedure(messageList, helpAllData); //суперфункция
+          var helpDataInput = HelpProcedure(messageList); //суперфункция
+          return helpDataInput;
+        }
 
+        //Формируем ответ
+        document.getElementById("bot_answere_button").addEventListener ('click', function() {
+          var helpDataInput = BotAnswer();
           //Вставлялка бота (проверка на пустоту на всякий случай)
           if (document.querySelector('[input="ticket_content"]').textContent == '') {
             document.querySelector('[input="ticket_content"]').innerText = "Добрый день!\n"+ helpDataInput;
           }
         });
+
         // Заменяем блок с клиентом на баланс и услуги
         var services = document.querySelector('.user_info > p:nth-child(4)').textContent.replace(/Проект:(.*)\)/g, '📞');
         services = services.replace("💰", "~~~ Есть МЧ ~~~");
@@ -194,9 +198,8 @@ window.addEventListener('load',  function (request, sender, sendResponse) {
             messageList  = messageList + item.innerHTML;
           });
 
-          var helpAllData = '';
           var messageList = messageList.toLowerCase();
-          var helpDataInput = HelpProcedure(messageList, helpAllData); //суперфункция
+          var helpDataInput = HelpProcedure(messageList); //суперфункция
 
           //Вставлялка бота (проверка на пустоту на всякий случай)
           if (document.querySelector('#message-form #message_text').textContent == '') {
@@ -226,9 +229,8 @@ window.addEventListener('load',  function (request, sender, sendResponse) {
             messageList  = messageList + item.innerHTML;
           });
 
-          var helpAllData = '';
           var messageList = messageList.toLowerCase();
-          var helpDataInput = HelpProcedure(messageList, helpAllData); //суперфункция
+          var helpDataInput = HelpProcedure(messageList); //суперфункция
 
           //Вставлялка бота (проверка на пустоту на всякий случай)
           if (document.querySelector('#message-form #message_text').textContent == '') {
