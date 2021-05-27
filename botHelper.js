@@ -94,9 +94,10 @@ var helpHtmlMiddle = ': ';
 var newLine = '\n';
 
 // Вынесено в функцию, потому что я плохой джаваскриптизер
-function HelpProcedure(messageList, helpAllData) {
+function HelpProcedure(messageList) {
   for (key in _botHelper) {
     botkey = _botHelper[key];
+    var helpAllData = '';
     if ( IndexOfAll(messageList, botkey[0]) ) {
       if (helpAllData.length > 100) {
         helpAllData = '';
