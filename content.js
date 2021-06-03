@@ -28,7 +28,7 @@ var FindScript = function (anyscript,callmessage ) {
 function check_icon(callibriLS) {
   var icon_status = FindScript('callibri.js', 'callibri');
   if ( !icon_status || !callibriLS ) {
-    return false
+    return false;
   };
   if (icon_status != '') {
     chrome.runtime.sendMessage({"message": 'greenicon', "greenicon": "greenicon"});
@@ -115,9 +115,7 @@ window.addEventListener('load',  function (request, sender, sendResponse) {
         document.getElementById('addOperations').addEventListener('change', function () {
           if (document.getElementById('addOperations').checked) {
             headerData = headerData + "\nОперации: " + operationsUrl;
-          }
-          else
-          {
+          } else {
             headerData = "Тикет: " + ticketLink + "\nПроект: " + projectLink.href+ "\nКлиент: " + clientEmail.textContent;
           }
               headerTaskInput.value = headerData;
@@ -138,9 +136,7 @@ window.addEventListener('load',  function (request, sender, sendResponse) {
           document.getElementById("linkBasecamp").innerHTML = "<button id='bot_answere_button'>Сформировать ответ</button><a target='_blank' style='color:black' href='"
           + basecamp.textContent + "'> Посмотреть задачу</a>";
           chrome.runtime.sendMessage({"message": 'basecampicon', "basecamp": ''});
-        }
-        else
-        {
+        } else {
           document.getElementById("linkBasecamp").innerHTML = "<button id='bot_answere_button'>Сформировать ответ</button><span style='color:gray;'> Без задачи</span>";
           chrome.runtime.sendMessage({"message": 'incallibriicon', "incallibri": 'incallibri'});
         }
@@ -154,8 +150,7 @@ window.addEventListener('load',  function (request, sender, sendResponse) {
             messageList  = messageList + item.innerHTML;
           });
 
-          var messageList = messageList.toLowerCase();
-          var helpDataInput = HelpProcedure(messageList); //суперфункция
+          var helpDataInput = HelpProcedure(messageList.toLowerCase()); //суперфункция
           return helpDataInput;
         }
 
@@ -198,8 +193,7 @@ window.addEventListener('load',  function (request, sender, sendResponse) {
             messageList  = messageList + item.innerHTML;
           });
 
-          var messageList = messageList.toLowerCase();
-          var helpDataInput = HelpProcedure(messageList); //суперфункция
+          var helpDataInput = HelpProcedure(messageList.toLowerCase()); //суперфункция
 
           //Вставлялка бота (проверка на пустоту на всякий случай)
           if (document.querySelector('#message-form #message_text').textContent == '') {
@@ -229,8 +223,7 @@ window.addEventListener('load',  function (request, sender, sendResponse) {
             messageList  = messageList + item.innerHTML;
           });
 
-          var messageList = messageList.toLowerCase();
-          var helpDataInput = HelpProcedure(messageList); //суперфункция
+          var helpDataInput = HelpProcedure(messageList.toLowerCase()); //суперфункция
 
           //Вставлялка бота (проверка на пустоту на всякий случай)
           if (document.querySelector('#message-form #message_text').textContent == '') {
@@ -300,7 +293,6 @@ window.addEventListener('load',  function (request, sender, sendResponse) {
               }
               else {
                 if (callibriLS.data.number && !callibriLS.data.dynamic)  {
-                  console.log(localStorage.getItem('callibri_phone'));
                   chrome.runtime.sendMessage({"message": 'callibri_phone', "callibri_phone": callibriLS.data.number + ' - <span class="redtext">Статика</span>'});
                 } else {
                   chrome.runtime.sendMessage({"message": 'callibri_phone', "callibri_phone": callibriLS.data.number});

@@ -95,16 +95,15 @@ var newLine = '\n';
 
 // Вынесено в функцию, потому что я плохой джаваскриптизер
 function HelpProcedure(messageList) {
+  var helpAllData = '';
   for (key in _botHelper) {
     botkey = _botHelper[key];
-    var helpAllData = '';
     if ( IndexOfAll(messageList, botkey[0]) ) {
-      if (helpAllData.length > 100) {
+      if (helpAllData.length > 150) {
         helpAllData = '';
         //console.log('-- Data clear --');
       }
       helpAllData = helpAllData + botkey[1] +'\n';
-      //console.log(key + ' added' );
     }
   }
   return helpAllData;
