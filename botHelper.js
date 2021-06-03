@@ -14,6 +14,8 @@ function IndexOfAll (messageList, neededArray) {
     });
     return needed;
 }
+
+
 let _botHelper = {     // объект
   script: {
     0: ["код","скрипт"],
@@ -90,10 +92,7 @@ let _botHelper = {     // объект
   }
 };
 
-var helpHtmlMiddle = ': ';
-var newLine = '\n';
-
-// Вынесено в функцию, потому что я плохой джаваскриптизер
+// Названо хреново, в остальном тут все ок
 function HelpProcedure(messageList) {
   var helpAllData = '';
   for (key in _botHelper) {
