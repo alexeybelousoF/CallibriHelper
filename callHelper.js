@@ -8,7 +8,7 @@ function change_call_container() {
     var name = container.getAttribute('name');
 
         window.addEventListener('storage', function(event) {
-            console.log(event);
+            //console.log(event);
             try {
                 var data = localStorage.getItem(name);
                 var call_data = JSON.parse(data);
@@ -32,8 +32,8 @@ function change_call_container() {
                 }
             }
             catch(e) {
-              console.log(e);
-              console.log(call_data);
+              //console.log(e);
+              //console.log(call_data);
             }
         });
   });
